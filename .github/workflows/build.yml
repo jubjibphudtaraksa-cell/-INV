@@ -1,0 +1,23 @@
+name: Build InvViewer
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: unzip -o InvViewer.zip
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: InvViewer/pom.xml
+      - run: mvn --batch-mode clean package
+        working-directory: InvViewer
+      - uses: actions/upload-artifact@v4
+        with:
+          name: InvViewer
+          path: InvViewer/target/InvViewer.jar
